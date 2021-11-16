@@ -1,4 +1,10 @@
-# Chainlink Truffle Box
+
+# Dynamic NFT Creation
+
+Little workshop at Chainlink 2021 Hackathon, learnt how to develop NFTs and integrate Chainlink libraries, this project really took my interest because it uses the Chainlink Decentralised Oracle Network. It is known that generating a true random number is not an easy task for computers as the term "pure randomnes" does not exists in tech, so in this scenario generating an NFT with the same spects and UID as others could be a problem, that's why I take advantatge of the DON of Chainlink to get that unique random number for the non-fungible token.   
+
+
+## Chainlink Truffle Box
 
 <br/>
 <p align="center">

@@ -8,10 +8,9 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 //const RINKEBY_LINKTOKEN = "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
 //const RINKEBY_VRF_COORDINATOR = 0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B
 //const RINKEBY_KEYHASH = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311
-contract FalcaoElInputsPersonaje is ERC721, VRFConsumerBase {
+contract AgustoCrewCharacter is ERC721, VRFConsumerBase {
     bytes32 public keyHash;
-    uint256 public vrfCoordinator;
-    bytes32 internal keyHash;
+    address public vrfCoordinator;
     uint256 internal fee;
 
     uint256 public randomResult;
@@ -31,8 +30,8 @@ contract FalcaoElInputsPersonaje is ERC721, VRFConsumerBase {
     //mappings will go here
     constructor(address _VRFCoordinator, address _LinkToken, bytes32 _keyHash) public
     VRFConsumerBase(_VRFCoordinator, _LinkToken)
-    ERC721("AgustoCrewCharacter", "AC") public {
-        vrfCoordinator = _VRFCoordinador;
+    ERC721("AgustoCrewCharacter", "AC") {
+        vrfCoordinator = _VRFCoordinator;
         keyHash = _keyHash;
         fee = 0.1 * 10**18; //0.1LINK
     }
@@ -40,20 +39,20 @@ contract FalcaoElInputsPersonaje is ERC721, VRFConsumerBase {
     function requestNewRandomCharacter (uint256 userProvidedSeed,
     string memory name
     ) public returns (bytes32) {
-        bytes32 requestId = requestRandomNess(keyHash, fee, userProvidedSeed);
+        bytes32 requestId = requestRandomness(keyHash, fee);
         requestToCharacterName[requestId] = name;
         requestToSender[requestId] = msg.sender;
 
         return requestId;
     }
 
-    function fulfillRandomness(bytes32 requestId, uint256 randonNumber)
+    function fulfillRandomness(bytes32 requestId, uint256 randomNumber)
     internal override {
         //definde the creation of the NFT
         uint256 newId = characters.length;
         uint256 strength = (randomNumber % 100);
         uint256 speed = ((randomNumber % 10000) / 100);
-        uint256 stamina = ((randonNumber % 1000000) /10000);
+        uint256 stamina = ((randomNumber % 1000000) /10000);
     
         characters.push(
             Character(
@@ -64,5 +63,13 @@ contract FalcaoElInputsPersonaje is ERC721, VRFConsumerBase {
             )
         );
         _safeMint(requestToSender[requestId], newId);
+    }
+
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "_ERC721: transer caller is not owner nor approved"
+        );
+        _setTokenURI(tokenId, _tokenURI);
     }
 }
